@@ -4,13 +4,11 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 # Install dependencies first (better caching)
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm install 
 # Copy source files
 COPY . .
 # Build the app
-RUN npm run build \
-    && npm install jwt-decode \
-    && npm install --save-dev @babel/plugin-proposal-private-property-in-object
+RUN npm run build 
 # Serve with Nginx 
 FROM nginx:1.27-alpine
 

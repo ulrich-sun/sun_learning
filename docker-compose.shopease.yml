@@ -1,0 +1,89 @@
+# Services
+services:
+  # Database
+  db:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    restart: unless-stopped
+    networks:
+      - shopease_net
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-appuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-apppassword}
+      POSTGRES_DB: ${POSTGRES_DB:-appdb}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ---------------------
+  # Backend API
+  # ---------------------
+  backend:
+    image: my-backend:latest
+    container_name: backend-api
+    restart: unless-stopped
+    networks:
+      - shopease_net
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ---------------------
+  # Frontend
+  # ---------------------
+  frontend:
+    image: my-frontend:latest
+    container_name: frontend-app
+    restart: unless-stopped
+    networks:
+      - shopease_net
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "80:80"
+    environment:
+      REACT_APP_API_URL: http://backend:8080
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# Define networks
+networks:
+  frontend_net:
+    driver: bridge
+    name: frontend_network
+  backend_net:
+    driver: bridge
+    name: backend_network
+
+# ---------------------------
+# Define volumes
+# ---------------------------
+volumes:
+  postgres_data:
+    name: pg_data
+    driver: local

@@ -1,8 +1,8 @@
 name: Build Shopease Images
 
-on:
-  push:
-    branches: [docker]
+# on:
+#   push:
+#     branches: [docker]
 
 jobs:
   build-and-push:
