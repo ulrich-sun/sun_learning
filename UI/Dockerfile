@@ -8,7 +8,9 @@ RUN npm ci --only=production
 # Copy source files
 COPY . .
 # Build the app
-RUN npm run build
+RUN npm run build \
+    && npm install jwt-decode \
+    && npm install --save-dev @babel/plugin-proposal-private-property-in-object
 # Serve with Nginx 
 FROM nginx:1.27-alpine
 
