@@ -1,0 +1,33 @@
+# Fichiers et dossiers liés à Git
+.git
+.gitignore
+
+# IDE et éditeurs
+.idea
+.vscode
+*.iml
+*.class
+
+# Build et dépendances locales
+target/
+build/
+out/
+.gradle/
+.mvn/
+!mvnw
+!mvnw.cmd
+
+# Fichiers temporaires
+*.log
+*.tmp
+*.swp
+
+# Config locale
+*.env
+*.local
+# application-*.yml
+# application-*.properties
+
+# OS et autres caches
+.DS_Store
+Thumbs.db

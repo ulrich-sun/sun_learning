@@ -1,0 +1,27 @@
+# Node modules (installed inside Docker)
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Build artifacts (generated inside Docker)
+build
+dist
+
+# Local environment and config files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS/system files
+.DS_Store
+Thumbs.db
+
+# Git and IDE
+.git
+.gitignore
+.vscode
+.idea
+*.iml
+
